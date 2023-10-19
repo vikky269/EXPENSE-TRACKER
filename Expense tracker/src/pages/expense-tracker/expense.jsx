@@ -10,12 +10,14 @@ import { useNavigate } from 'react-router-dom'
 const Expense = () => {
 
  const {addTransaction} = useAddTransaction()
- const {transactions}=useGetTransactions()
- const {name, profilephoto}= useGetUserInfo()
+ const {transactions, transactionTotals}=useGetTransactions()
+ const {name, profilePhoto}= useGetUserInfo()
 
  const [description, setDescription] = useState("")
  const [transactionAmount, setTransactionAmount] = useState(0)
  const [transactionType, setTransactionType] = useState("expense")
+
+ const {balance, income, expenses}= transactionTotals
 
  const navigate = useNavigate()
 
@@ -23,6 +25,8 @@ const Expense = () => {
   const onSubmit = async(e) => {
    e.preventDefault()
    await addTransaction({description, transactionAmount, transactionType})
+   setDescription("")
+   setTransactionAmount("")
  }
 
  const SignUserOut =  async () => {
@@ -30,11 +34,14 @@ const Expense = () => {
     await signOut(auth)
     localStorage.clear()
     navigate("/")
-   }catch(e){
+   }
+
+   catch(e){
    console.error(e)
    }
- }
 
+ }
+  
   return (
     <>
     <div className='expense-tracker'>
@@ -43,16 +50,21 @@ const Expense = () => {
         <h1>{name}'s Expense Tracker</h1>
         <div className="balance">
           <h3>Your balance</h3>
-          <h2>$0.00</h2>
+          {balance >= 0 ? (
+             <h2>${balance}</h2>
+          ) : (
+            <h2>-${balance * -1}</h2>
+          )}
+          
         </div>
         <div className="summary">
           <div className="income">
             <h4>Income</h4>
-            <p>$0.00</p>
+            <p>${income}</p>
           </div>
           <div className="expenses">
             <h4>Expenses</h4>
-            <p>$0.00</p>
+            <p>${expenses}</p>
           </div>
         </div>
         <form  className="add-transaction" onSubmit={onSubmit}>
@@ -60,6 +72,7 @@ const Expense = () => {
           type="text" 
           placeholder='Description' 
           required
+          value={description}
           onChange={(e)=> setDescription(e.target.value)}
           />
 
@@ -67,6 +80,7 @@ const Expense = () => {
           type="number" 
           placeholder='Amount' 
           required 
+          value={transactionAmount}
           onChange={(e)=> setTransactionAmount(e.target.value)}
           />
 
@@ -93,9 +107,9 @@ const Expense = () => {
         </form>
       </div>
 
-      {profilephoto &&  
+      {profilePhoto &&  
       <div className='profile'> 
-      <img src={profilephoto} alt=""  className='profile-photo'/>
+      <img src={profilePhoto} alt=""  className='profile-photo'/>
        <button onClick={SignUserOut} className='Sign-out-button'>Sign Out</button>
       </div>}
     </div>

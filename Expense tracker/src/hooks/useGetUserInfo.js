@@ -1,5 +1,5 @@
 export const useGetUserInfo = ()=> {
-    const {name, profilephoto, userID, isAuth } = JSON.parse(localStorage.getItem("auth"))
+    const {name, profilePhoto, userID, isAuth } = JSON.parse(localStorage.getItem("auth"))
 
-    return {name, profilephoto, userID, isAuth}
+    return {name, profilePhoto, userID, isAuth}
 }

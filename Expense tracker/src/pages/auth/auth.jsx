@@ -7,12 +7,13 @@ import { useNavigate } from 'react-router-dom'
 
 const Auth = () => {
   const navigate = useNavigate()
+
   const signInwithGoogle = async () => {
     const result = await signInWithPopup(auth, provider)
     console.log(result)
 
      const authInfo = {
-      name: result.user.displayName,
+     name: result.user.displayName,
      userID: result.user.uid,
      profilePhoto: result.user.photoURL,
      isAuth:true,
